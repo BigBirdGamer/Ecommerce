@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserDetails, updateUserProfile } from "../actions/userActions";
+import {
+  getUserDetails,
+  updateUserProfile,
+  deleteUser,
+} from "../actions/userActions";
 
 const ProfilePage = () => {
   const [email, setEmail] = useState("");
@@ -22,6 +26,9 @@ const ProfilePage = () => {
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userLogin;
 
+  const userDelete = useSelector((state) => state.userDelete);
+  const { success: successDelete } = userDelete;
+
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
@@ -34,7 +41,7 @@ const ProfilePage = () => {
         setEmail(user.email);
       }
     }
-  }, [dispatch, userInfo, user]);
+  }, [dispatch, userInfo, user, successDelete]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -45,14 +52,13 @@ const ProfilePage = () => {
     }
   };
 
-  const handleClickDelete = (event) => {
-    fetch(`/api/user/${user._id}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+  const handleClickDelete = (id) => {
+    fetch(`/api/user/delete/${id}`, { method: 'DELETE' })
+    .then(() => {('Delete successful')
+    navigate('/login')
+  });
+
   };
-  console.log(user._id);
   return (
     <Row>
       <Col md={3}>
@@ -103,7 +109,7 @@ const ProfilePage = () => {
             Update
           </Button>
         </Form>
-        <Button onClick={handleClickDelete}>Delete Account</Button>
+        <Button onClick={()=>handleClickDelete(user._id)}>Delete Account</Button>
       </Col>
       <Col md={9}>
         <h2>My Orders</h2>

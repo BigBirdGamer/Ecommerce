@@ -32,26 +32,6 @@ router.get("/profile", protect, async (req, res) => {
   }
 });
 
-// router.put("/profile", protect, async (req, res) => {
-//   const {_id} = req.user
-//   const user = await User.findById(_id);
-//   if (user) {
-//     user.name = req.body.name || user.name;
-//     user.email = req.body.email || user.email;
-//     if (req.body.password) {
-//       user.password = bcrypt.hashSync(req.body.password, 10);
-//     }
-//     const updatedUser = await user.save({
-//       _id: _id._id,
-//       name: updatedUser.name,
-//       email: updatedUser.email,
-//       isAdmin: updatedUser.isAdmin,
-//       token: generateToken(updatedUser._id),
-//     });
-//   } else {
-//     throw new Error("User not found");
-//   }
-// });
 
 router.put("/profile", protect, async (req, res) => {
   const { _id } = req.user;
@@ -73,6 +53,12 @@ router.put("/profile", protect, async (req, res) => {
   } else {
     throw new Error("User not found");
   }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+  let {id} = req.params
+  const user = await User.findByIdAndDelete(id);
+  
 });
 
 router.post("/register", async (req, res) => {
