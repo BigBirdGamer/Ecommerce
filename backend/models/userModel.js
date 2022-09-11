@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const UserSchema = mongoose.Schema({
   name: {
@@ -19,5 +20,10 @@ const UserSchema = mongoose.Schema({
     required: true,
     default: false,
   },
+},{
+    timestamps: true,
 });
+
+
+
 module.exports = mongoose.model("User", UserSchema);

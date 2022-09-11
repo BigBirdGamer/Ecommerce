@@ -3,14 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../actions/userActions";
-import FormComponent from "../components/FormComponent";
+import ErrorMessage from "../components/ErrorMessage";
+import LoadingMessage from "../components/LoadingMessage";
+import FormContainer from "../components/FormContainer";
 
-function RegisterPage() {
+const RegisterPage = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -18,60 +21,67 @@ function RegisterPage() {
   const { loading, error, userInfo } = userRegister;
 
   useEffect(() => {
-    if(userInfo)
-    navigate("/")
+    if (userInfo) {
+      navigate("/");
+    }
   }, [userInfo]);
-  
-  const handleSubmit = (event) => {
-    event.preventDefault();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Dispatch register
     if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
-     }else{
-       dispatch(register(name, email, password))
-     }
+      setMessage(" Passwords do not match ");
+    } else {
+      dispatch(register(name, password, email));
+    }
   };
+
   return (
-    <FormComponent>
+    <FormContainer>
       <h1>Sign Up</h1>
-      {error && alert(message)} 
+      {/* Error if Password not the same */}
+      {message && <ErrorMessage variant="danger">{message}</ErrorMessage>}
+      {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
+      {loading && <LoadingMessage />}
       <Form onSubmit={handleSubmit}>
+        {/*  Name */}
         <Form.Group controlId="name">
-          <Form.Label>Name</Form.Label>
+          <Form.Label> Name </Form.Label>
           <Form.Control
             type="name"
-            placeholder="Enter Name"
+            placeholder="Enter your name "
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(event) => setName(event.target.value)}
           ></Form.Control>
         </Form.Group>
-
+        {/* Email */}
         <Form.Group controlId="email">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder="Enter your email address"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
           ></Form.Control>
         </Form.Group>
-
+        {/* PASSWORD */}
         <Form.Group controlId="password">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Password </Form.Label>
           <Form.Control
             type="password"
-            placeholder="Enter password"
+            placeholder="Enter your password "
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
           ></Form.Control>
         </Form.Group>
-
+        {/* Confirm Password */}
         <Form.Group controlId="confirmPassword">
-          <Form.Label>Confirm Password</Form.Label>
+          <Form.Label>Confirm Password </Form.Label>
           <Form.Control
             type="password"
-            placeholder="Confirm Password"
+            placeholder="Confirm Password "
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(event) => setConfirmPassword(event.target.value)}
           ></Form.Control>
         </Form.Group>
 
@@ -80,13 +90,15 @@ function RegisterPage() {
         </Button>
       </Form>
 
+      {/* REGISTER */}
       <Row className="py-3">
         <Col>
-          Have an account? <Link to={"/login"}>Login</Link>
+          Already Registered?
+          <Link to={"/login"}>Log In</Link>
         </Col>
       </Row>
-    </FormComponent>
+    </FormContainer>
   );
-}
+};
 
 export default RegisterPage;

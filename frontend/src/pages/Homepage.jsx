@@ -1,38 +1,40 @@
-import { React, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Row, Col } from "react-bootstrap";
+import React, { useEffect } from "react";
 import Product from "../components/Product";
+import { Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/productActions";
+import ErrorMessage from "../components/ErrorMessage";
+import LoadingMessage from "../components/LoadingMessage";
 
-function Homepage() {
+const HomePage = () => {
   const dispatch = useDispatch();
-
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
+
   useEffect(() => {
     dispatch(listProducts());
   }, [dispatch]);
 
   return (
-    <div>
-      <h1>Latest</h1>
+    <>
+      <h1>Latest and Greatest</h1>
       {loading ? (
-        <h1> LOADING ...</h1>
+        // Loading Screen if internet slow
+        <LoadingMessage />
       ) : error ? (
-        <h1> ERROR ... {error}</h1>
+        // Custom Error Messages
+        <ErrorMessage>{error}</ErrorMessage>
       ) : (
         <Row>
-          {products.map((para, key) => {
-            return (
-              <Col sm={12} md={6} lg={4} xl={3} key={key}>
-                <Product para={para} />
-              </Col>
-            );
-          })}
+          {products.map((product, key) => (
+            <Col sm={12} md={6} lg={4} xl={3} key={key}>
+              <Product product={product} />
+            </Col>
+          ))}
         </Row>
       )}
-    </div>
+    </>
   );
-}
+};
 
-export default Homepage;
+export default HomePage;
