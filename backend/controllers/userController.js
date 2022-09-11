@@ -32,7 +32,6 @@ router.get("/profile", protect, async (req, res) => {
   }
 });
 
-
 router.put("/profile", protect, async (req, res) => {
   const { _id } = req.user;
   const user = await User.findById(_id);
@@ -56,9 +55,8 @@ router.put("/profile", protect, async (req, res) => {
 });
 
 router.delete("/delete/:id", async (req, res) => {
-  let {id} = req.params
+  let { id } = req.params;
   const user = await User.findByIdAndDelete(id);
-  
 });
 
 router.post("/register", async (req, res) => {

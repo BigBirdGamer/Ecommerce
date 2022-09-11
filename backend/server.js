@@ -3,8 +3,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 3000
 const MONGO_URI = process.env.MONGO_URI;
-const products = require("./data/products");
-
 
 
 const app = express();
@@ -15,9 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 mongoose.connection.on("error", (err) => {
     console.log(err.message + "is Mongod not running");
   });
-  mongoose.connection.on("disconnect", () => {
-    console.log("mongo not running");
-  });
+
   mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
   });
